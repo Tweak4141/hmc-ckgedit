@@ -230,7 +230,7 @@ function cleanID($raw_id,$ascii=false,$media=false){
     }
 
 
-  $sepchar = $dwfck_conf['sepchar'];
+  $sepchar = $dwfck_conf['sepchar'] ?? null;
   if($sepcharpat == null) // build string only once to save clock cycles
     $sepcharpat = '#\\'.$sepchar.'+#';
 
@@ -246,8 +246,16 @@ function cleanID($raw_id,$ascii=false,$media=false){
     $id = strtr($id,'/',$sepchar);
   }
 */
-  if($dwfck_conf['deaccent'] == 2 || $ascii) $id = utf8_romanize($id);
-  if($dwfck_conf['deaccent'] || $ascii) $id = utf8_deaccent($id,-1);
+  if (($dwfck_conf['deaccent'] ?? 0) == 2 || ($ascii ?? false)) {
+    $id = utf8_romanize($id);
+  }
+
+  if (($dwfck_conf['deaccent'] ?? 0) || ($ascii ?? false)) {
+    $id = utf8_deaccent($id, -1);
+  }
+
+
+
 
   //remove specials
   $id = utf8_stripspecials($id,$sepchar,'\*');
